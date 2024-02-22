@@ -5,9 +5,9 @@ import {useNavigate} from "react-router-dom";
 const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
-    let [user, setUser] = useState(null);
-    let [authTokens, setAuthTokens] = useState(null);
-    let navigate = useNavigate();
+    const [user, setUser] = useState(localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null);
+    const [authTokens, setAuthTokens] = useState(localStorage.getItem('authTokens') ? jwtDecode(localStorage.getItem('authTokens')) : null);
+    const navigate = useNavigate();
 
     const loginUser = async (e) => {
         e.preventDefault();
