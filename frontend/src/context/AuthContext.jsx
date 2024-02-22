@@ -5,8 +5,8 @@ import {useNavigate} from "react-router-dom";
 const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
-    const [user, setUser] = useState(localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null);
-    const [authTokens, setAuthTokens] = useState(localStorage.getItem('authTokens') ? jwtDecode(localStorage.getItem('authTokens')) : null);
+    const [user, setUser] = useState(() => localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null);
+    const [authTokens, setAuthTokens] = useState(() => localStorage.getItem('authTokens') ? jwtDecode(localStorage.getItem('authTokens')) : null);
     const navigate = useNavigate();
 
     const loginUser = async (e) => {
@@ -33,9 +33,17 @@ export const AuthProvider = ({children}) => {
         }
     }
 
+    const logoutUser = () => {
+        setAuthTokens(null);
+        setUser(null);
+        localStorage.removeItem('authTokens');
+        navigate('/login');
+    }
+
     const contextData = {
         user: user,
         loginUser: loginUser,
+        logoutUser: logoutUser,
     }
 
     return (
