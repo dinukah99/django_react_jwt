@@ -3,7 +3,7 @@ import AuthContext from "../context/AuthContext.jsx";
 
 const HomePage = () => {
     let [notes, setNotes] = useState([]);
-    let {authTokens} = useContext(AuthContext);
+    let {authTokens, logoutUser} = useContext(AuthContext);
 
     useEffect(() => {
         fetchNotes();
@@ -17,13 +17,17 @@ const HomePage = () => {
                 "Authorization": "Bearer " + String(authTokens.access)
             }
         })
-        const data = response.json()
-        setNotes(data)
+        const data = await response.json()
+        if (response.status === 200) {
+            setNotes(data)
+        } else if (response.statusText === 'Unauthorized') {
+            logoutUser()
+        }
     }
 
     return (
         <div>
-            <p>You are Logged to the Homepage</p>
+            <p>You are Logged in to the Homepage</p>
             <ul>
                 {notes.map((note) => {
                     return <li key={note.id}>{note.body}</li>

@@ -23,6 +23,6 @@ def getRoutes(request):
 @permission_classes([IsAuthenticated])
 def getNotes(request):
     user = request.user
-    notes = Note.note_set.all()
+    notes = user.note_set.all()
     serializer = NoteSerializer(notes, many=True)
     return Response(serializer.data)
